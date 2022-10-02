@@ -1,0 +1,51 @@
+<div class="container-fluid full bg-image">
+    
+    <div class="row justify-content-center list">
+        <div class="text-center d-flex align-items-center justify-content-center mt-4 mb-1">
+            <h2 class="text-uppercase fst-italic text-wrap fs-4 own-title">
+                NOS FORMATIONS PAR THEMES
+            </h2>
+        </div>
+        <div class="container-fluid w-100">
+            <div class="card mb-5 mt-3 overflow-auto" *ngFor="let t of themes$ | async">
+                <h4 class="card-header">{{ t.nom }}</h4>
+                <div class="card-body">
+                    <p class="fs-5">{{ t.description }}</p>
+                    <ngb-accordion #acc="ngbAccordion" activeIds="toggle-1" *ngFor="let s of sthemes$ | async" class="mb-3 overflow-auto">
+                        <ng-container *ngIf="t.idTheme==s.theme.idTheme" class="overflow-auto">
+                            <ngb-panel id="toggle-1">
+                                <ng-template ngbPanelTitle>
+                                    <span>&#9733; <b class="fs-5">{{s.nom}}</b></span>
+                                  </ng-template>
+                                <ng-template ngbPanelContent  >
+                                    <div class="table-responsive rounded ">
+                                        <table class="table table-striped table-hover fs-6 overflow-auto align-middle table-sm">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th scope="col" class="th-sm">Code</th>
+                                                    <th scope="col" class="th-sm">Nom</th>
+                                                    <th scope="col" class="th-sm">Description</th>
+                                                    <th scope="col" class="nb">Nbre Jours</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody *ngFor="let f of formations$ |async">
+                                                <tr *ngIf="f.stheme.idStheme==s.idStheme" class="overflow-auto">
+                                                    <th scope="row" class="align-middle own-text"><a [routerLink]="'/formation/details/'+f.idFormation"><span class="own-text">{{ f.codeFormation }}</span></a></th>
+                                                    <td class="align-middle"> {{ f.nom }}</td>
+                                                    <td class="align-middle">{{ f.description }}</td>
+                                                    <td class="align-middle nb"><span class="badge bg-primary rounded-pill ps-3 pe-3 fs-5 pb-2">{{ f.nbreJrs| number }}</span></td>
+                                                    <td class="align-middle"><button class="btn btn-success btn-sm ms-5" [routerLink]="'/session/lister/formation/'+f.idFormation">Sessions</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ng-template>
+                            </ngb-panel>
+                        </ng-container>
+                    </ngb-accordion>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

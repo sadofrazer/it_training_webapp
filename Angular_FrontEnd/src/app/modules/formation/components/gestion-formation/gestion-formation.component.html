@@ -1,0 +1,108 @@
+<div class="container-fluid full">
+    <div class="row d-flex justify-content-center   align-items-center">
+        <div class="text-center mt-3">
+            <span class="text-uppercase fst-italic text-wrap fs-4 own-title">
+                Gestion du catalogue de Formations
+            </span>
+        </div>
+    </div>
+    <div class="container mt-3" *ngIf="varOk">
+        <ngb-accordion [closeOthers]="true" activeIds="static-1" class="bg-dark">
+            <ngb-panel id="static-1">
+                <ng-template ngbPanelTitle>
+                  <span><b>Créer / Modifier une formation</b></span>
+                </ng-template>
+                <ng-template ngbPanelContent class="bg-dark">
+                    <form class="row g-3  bg-dark p-3 text-white form-floatingneeds-validation" novalidate #form="ngForm" (ngSubmit)="addFormation()" *ngIf="formation  as f">
+                        <input type="hidden" class="form-control" id="idForm" name="idForm" [(ngModel)]="f.idFormation" #id="ngModel" >
+                        <div class="col-md-4">
+                            <label for="code" class="form-label">Code Formation</label>
+                            <input type="text" class="form-control own-text" id="code" name="code"required minlength="8" [(ngModel)]="f.codeFormation" #code="ngModel" (change)="changeId($event)">
+                            <div *ngIf="code.invalid && code.dirty" class="invalid-feedback">
+                                Le code de la formation doit avoir au moins 8 caractères
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="nom" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="nom" name="nom"required [(ngModel)]="f.nom" #nom="ngModel">
+                            <div *ngIf="nom.invalid && nom.dirty" class="invalid-feedback text-danegr">
+                                Le nom de la formation est indispensable!!!
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <label for="inputStheme" class="form-label">Sous thème</label>
+                            <select class="dropdownlist" id="inputStheme" class="form-select"  (change)="selectChange($event)" name="stheme" required>
+                                <option [ngValue]="null" disabled>Choisir Sous thème ...</option>
+                                <option *ngFor="let s of sthemes$|async" [ngValue]="s" [selected]="f.stheme.codeStheme===s.codeStheme">{{s.codeStheme}}-{{s.nom}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="inputJours" class="form-label">Nombre de Jours</label>
+                            <input class="form-control fs-5 pt-0 pb-2" type="number"  id="inputJours" min="1" max="99" required [(ngModel)]="f.nbreJrs" name="nbreJours" #nbreJours="ngModel">
+                            <div *ngIf="nbreJours.invalid && nbreJours.dirty" class="invalid-feedback">
+                                Le nombre de jours doit etre supérieur à 0
+                            </div>
+                        </div>
+                        <div class="col-12 mb-4">
+                            <label for="inputDescription" class="form-label">Description</label>
+                            <textarea class="form-control" name="" id="inputDescription" [(ngModel)]="f.description" name="description"cols="30" rows="3" placeholder="Entrez une description ou présentation de ladite formation" [value]="''"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputObjectifs" class="form-label">Objectifs</label>
+                            <textarea class="form-control" name="" id="inputObjectifs" cols="30" rows="4" placeholder="Entrez une liste d'objectifs de ladite formation séparée par des points virgule" [value]="''"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputProgramme" class="form-label">Programme</label>
+                            <textarea class="form-control" name="" id="inputProgramme" cols="30" rows="4" placeholder="Entrez le programme de la formation dont les items sont séparés par des points virgule" [value]="''"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" [disabled]="form.invalid" class="btn btn-primary mt-3 ps-4 pe-4" [ngClass]="isCreation? 'btn-primary':'btn-warning'" >{{ isCreation? "Créer":"Modifier"}}</button>
+                        </div>
+                    </form>
+                </ng-template>
+              </ngb-panel>
+        </ngb-accordion>
+    </div>
+
+    <div class="container-fluid p-3">
+        <ngb-accordion [closeOthers]="true" activeIds="static-1">
+            <ngb-panel id="static-1">
+                <ng-template ngbPanelTitle>
+                  <span><b>Liste des formations</b></span>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    <div class="row g-1  p-0 text-white table-responsive">
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"  class="row-border hover table table-striped table-hover">
+                            <thead>
+                                <tr class="fs-6">
+                                    <th scope="col"><b>Code</b></th>
+                                    <th scope="col"><b>Nom</b></th>
+                                    <th scope="col"><b>Description</b></th>
+                                    <th scope="col"><b>Thème</b></th>
+                                    <th scope="col"><b>Sous Thème</b></th>
+                                    <th scope="col" class="nb text-center"><b>Nbre Jours</b></th>
+
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let f of formations$">
+                                <tr (click)="clickForm(f.idFormation)">
+                                    <th scope="row" class="align-middle own-text"><a class="own-text" [routerLink]="'/formation/gestion/'+f.idFormation">{{ f.codeFormation }}</a></th>
+                                    <td class="align-middle"> {{ f.nom }}</td>
+                                    <td class="align-middle">{{ f.description }}</td>
+                                    <td class="align-middle">{{ f.stheme.theme.nom }}</td>
+                                    <td class="align-middle">{{ f.stheme.nom }}</td>
+                                    <td class="align-middle text-center"><span class="badge bg-primary rounded-pill me-1 ms-1 ps-3 pe-3 text-center fs-5 pt-0 pb-2">{{ f.nbreJrs| number }}</span></td>
+                                    <td class="align-middle"><button class="btn btn-danger btn-sm"
+                                        appConfirm
+                                        [confirmMessage]="'Voulez-vous réellement supprimer cette formation ?'"
+                                        (confirmClick)="deleteForm(f.idFormation)">Supprimer</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-template>
+              </ngb-panel>
+        </ngb-accordion>
+    </div>
+</div>

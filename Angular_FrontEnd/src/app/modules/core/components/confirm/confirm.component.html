@@ -1,0 +1,18 @@
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title">Confirmer la suppression</h4>
+    </div>
+    <div class="modal-body">
+        <p>{{ confirmMessage }}</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary me-1"
+        (click)="confirmResponse.emit(false)">
+            Non
+        </button>
+        <button type="button" class="btn btn-danger"
+        (click)="confirmResponse.emit(true)">
+            Oui
+        </button>
+    </div>
+</div>

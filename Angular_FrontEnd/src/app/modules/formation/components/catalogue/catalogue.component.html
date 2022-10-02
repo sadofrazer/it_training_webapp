@@ -1,0 +1,32 @@
+<div class="container-fluid full p-0 m-0">
+    <div class="row d-flex justify-content-center   align-items-center">
+        <div class="text-center mt-5 mb3">
+            <span class="text-uppercase text-wrap fs-4 own-title">
+                NOTRE CATALOGUE DE FORMATIONS
+            </span>
+            <ng-container *ngIf="(word!=null) && (word !='')">
+                <p class=" mt-3 container text-uppercase text-wrap fs-6 own-title text-start">
+                    Ci-dessous la liste des formations comprenant le mot "{{ word }}"...
+                </p>
+            </ng-container>
+        </div>
+    </div>
+    <div class="list mt-4" *ngIf="formations$">
+        <div class="row g-4 p-3 d-flex justify-content-start   align-items-center w-100">
+            <div class="col-sm-2 " *ngFor="let f of formations$| async">
+                <div class="card mb-3 d-inline-block position-relative w-100">
+                    <div class="row img">
+                        <img [src]="'../../../../../assets/img/formations/'+f.codeFormation+'.jpg'"  onerror="this.src='https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'" 
+                        class="card-img-top h-100 " alt="formations">
+                    </div>
+                    <div class="card-body text-center border-top border-dark border-2">
+                      <span class="fs-5 badge bg-dark position-absolute bottom-50 mb-5 start-0 p-2">{{ f.nbreJrs | number }} {{ f.nbreJrs > 1? 'Jours':'Jour' }} </span>  
+                      <h5 class="card-title fs-5"><b>{{f.stheme.nom}}</b></h5>
+                      <p class="card-text my-3">{{f.nom}}</p>
+                      <a [routerLink]="'/formation/details/'+f.idFormation" class="btn btn-sm btn-primary position-absolute bottom-0 start-50 translate-middle-x mb-3 mt-5">Voir plus ...</a>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>

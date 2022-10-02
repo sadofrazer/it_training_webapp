@@ -1,0 +1,93 @@
+stages:
+- build
+- Test Image
+- Push Image
+#Code Review
+#Clear Review
+- Deploy Prod
+
+variables:
+    IMAGE_NAME: "sadofrazer/ittraining_webapp:${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"
+    CONTAINER_NAME: "ittraining_webapp"
+    PROD_CONTAINER_NAME: "prod_it_training_webapp"
+    PRODUCTION_HOST: "34.70.85.182"
+
+image: docker:latest
+services:
+    - name: docker:dind
+      alias: docker-frazer
+
+build dockerhub:
+    stage: build
+    tags:
+      - runner-prod
+    script:
+        - docker build -t ${IMAGE_NAME} .
+        #- docker save ${IMAGE_NAME}
+
+
+test image:
+    stage: Test Image
+    tags:
+      - runner-prod
+    script:
+        - echo 'Test Image'
+        - docker stop ${CONTAINER_NAME} || true
+        - docker rm ${CONTAINER_NAME} || true
+        - docker run --name $CONTAINER_NAME -d -p 5005:80 $IMAGE_NAME
+        - sleep 5
+        - apk --no-cache add curl
+        - curl http://it-training-bdd.cloudapps-cm.com:5005 | grep -iq "IT Training" || true
+        - echo "Test OK"
+        - docker stop ${CONTAINER_NAME} || true
+        - docker rm ${CONTAINER_NAME} || true
+    rules:
+        - if: ($CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event")
+
+Release all:
+    stage: Push Image
+    tags:
+      - runner-prod
+    script:
+        - docker login -u sadofrazer -p ${PASSWORD}
+        - docker push ${IMAGE_NAME}
+        - docker logout
+        - docker stop ${CONTAINER_NAME} || true
+        - docker rm ${CONTAINER_NAME} || true
+
+# FIN CI et DEBUT PHASES CD
+deploy Formation:
+    stage: Deploy Prod
+    tags:
+      - runner-prod
+    image: alpine
+    services:
+        - name: alpine
+          alias: alpine-frazer
+    before_script:
+      # Get ssh keys from target server and add them to known_hosts
+      - apk update
+      - 'which ssh-agent || ( apk add openssh-client )'
+      - eval $(ssh-agent -s)
+      - mkdir -p ~/.ssh
+      - chmod 700 ~/.ssh
+      - ssh-keyscan -p 22 -4 $PRODUCTION_HOST >> ~/.ssh/known_hosts
+      - chmod 644 ~/.ssh/known_hosts
+      # Add the private key defined in PRIVATE_KEY variable
+      - echo "$PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null 
+    script:
+      - echo "Deploying API on prod env"
+      - ssh sadofrazer@$PRODUCTION_HOST -p 22 "sh /home/sadofrazer/del_containers.sh"
+      #FORMATION
+      - ssh sadofrazer@$PRODUCTION_HOST -p 22 "docker stop ${PROD_CONTAINER_NAME}" || true
+      - ssh sadofrazer@$PRODUCTION_HOST -p 22 "docker rm ${PROD_CONTAINER_NAME}" || true
+      - ssh sadofrazer@$PRODUCTION_HOST -p 22 "docker rmi ${IMAGE_NAME} || true"
+      - ssh sadofrazer@$PRODUCTION_HOST -p 22 "docker run --name ${PROD_CONTAINER_NAME} -d -p 8085:80 --restart=always ${IMAGE_NAME}"
+      - sleep 5
+      - apk --no-cache add curl
+      - curl http://it-training-bdd.cloudapps-cm.com:8085 | grep -iq "IT Training" || true
+    environment: 
+        name: webapp_prod_env
+        url: "http://it-training-bdd.cloudapps-cm.com:5005"
+    only:
+      - master

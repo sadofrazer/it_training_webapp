@@ -1,0 +1,84 @@
+<div class="container-fluid pb-5">
+    <div class="row d-flex justify-content-center align-items-center" *ngIf=" formation$|async as f ">
+        <div class="text-center mt-5 mb-5">
+            <span class="text-uppercase text-wrap fs-4 own-title">
+                DETAILS SUR LA FORMATION  <span class="fst-italic own-title">" <b class="own-title fs-5">{{f?.nom}}</b>"</span>
+            </span>
+        </div>
+    </div>
+    <div class="container p-0 bg-primary" *ngIf=" formation$|async as f ">
+        <div class="card">
+            <div class="row container p-0 m-0 titre">
+                <div class="col-md-3 mt-3 ms-3 p-0 d-flex align-items-center h-100">
+                    <img [src]="'../../../../../assets/img/formations/'+f?.codeFormation+'.jpg'" 
+                    onerror="this.src='https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'" class="img w-100 rounded me-5" alt="...">
+                </div>
+                <div class="col-md-8 ms-3 position-relative">
+                    <div class="card-body">
+                    <h4 class="card-title  fs-4 own-text"><b class="own-text">{{ f?.codeFormation}}</b></h4>
+                    <h4 class="card-title mb-4 fs-5"><b>{{ f?.nom }}</b></h4>
+                    <button class="fst-italic badge btn-success text-wrap p-2 fs-6 mt-3 mb-3" [routerLink]="'/session/lister/formation/'+f.idFormation" >&#9733; <b>Sessions</b></button>
+                    <p class="card-text"><small class="fst-italic badge bg-primary text-wrap fs-5  p-2 ">Durée : {{ f?.nbreJrs }} {{f?.nbreJrs>1? 'Jours':'Jour'}}</small></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center mt-4 mb-5">
+                <div class="col-md-10 mb-4">
+                    <ngb-accordion  [closeOthers]="true" activeIds="static-1, static-2, static-3">
+                        <ngb-panel id="static-1">
+                            <ng-template ngbPanelTitle>
+                                <span><b>Présentation</b></span>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                <p class="mb-2 fs-5"><b>{{ f?.description}}</b></p>
+                                <p> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia
+                                aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
+                                sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica,
+                                craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                                labore sustainable VHS.</p>
+                            </ng-template>
+                          </ngb-panel>
+                    </ngb-accordion>
+                </div>
+                <div class="col-md-5 mb-4">
+                    <ngb-accordion [closeOthers]="true" activeIds="static-2">
+                        <ngb-panel id="static-2">
+                            <ng-template ngbPanelTitle>
+                                <span><b>Objectifs</b></span>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                <p class="mb-2"><b>{{ f?.objectifs}}</b></p>
+                                <p> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia
+                                aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
+                                sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica,
+                                craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                                labore sustainable VHS.</p>
+                            </ng-template>
+                          </ngb-panel>
+                    </ngb-accordion>
+                </div>
+                <div class="col-md-5">
+                    <ngb-accordion #acc="ngbAccordion" activeIds="static-3">
+                        <ngb-panel id="static-3">
+                            <ng-template ngbPanelTitle>
+                                <span><b>Programme</b></span>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                <p class="mb-2 fs-5"><b>{{ f?.programme}}</b></p>
+                                <p> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia
+                                aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
+                                sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica,
+                                craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                                labore sustainable VHS.</p>
+                            </ng-template>
+                          </ngb-panel>
+                    </ngb-accordion>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  

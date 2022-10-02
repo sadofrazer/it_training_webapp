@@ -1,0 +1,191 @@
+<div class="container-fluid full">
+    <div class="row d-flex justify-content-center   align-items-center">
+        <div class="text-center  mt-5  mb-4 ">
+            <span class="text-uppercase fst-italic text-wrap fs-4 own-title">
+                Gestion des sessions
+            </span>
+        </div>
+    </div>
+    <div class="container mt-3" *ngIf="session && sessions$ && formations$ && salles">
+        <ngb-accordion [closeOthers]="true" activeIds="static-1" class="bg-dark">
+            <ngb-panel id="static-1">
+                <ng-template ngbPanelTitle>
+                  <span><b>Créer / Modifier une session</b></span>
+                </ng-template>
+                <ng-template ngbPanelContent class="bg-dark">
+                    <form class="row g-3  bg-dark p-3 text-white form-floatingneeds-validation" novalidate #form="ngForm" (ngSubmit)="addUpdateSession()">
+
+                        <div class="col-md-4">
+                            <label for="code" class="form-label">Code Session</label>
+                            <input type="text" class="form-control own-text" id="code" name="code"required minlength="6" [(ngModel)]="session.codeSession" #code="ngModel" (change)="changeId($event)">
+                            <div *ngIf="code.invalid && code.dirty" class="invalid-feedback">
+                                Le code de la session doit avoir au moins 6 caractères
+                            </div>
+                        </div>
+                        <div class="col-md-8"></div>
+
+                        <div class="col-md-8">
+                            <label for="nom" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="nom" name="nom"required [(ngModel)]="session.nom" #nom="ngModel">
+                            <div *ngIf="nom.invalid && nom.dirty" class="invalid-feedback text-danegr">
+                                Le nom de la session est indispensable!!!
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="inputType" class="form-label">Type</label>
+                            <select class="dropdownlist" id="inputType" class="form-select"  [(ngModel)]="session.type" name="type" required  #type="ngModel">
+                                <option value="INTER" >INTER</option>
+                                <option value="INTRA" >INTRA</option>
+                            </select>
+                            <div *ngIf="type.invalid && type.dirty" class="invalid-feedback text-danegr">
+                               Veuillez choisir un type
+                            </div>
+                        </div>
+
+                       
+                        <div class="col-md-6">
+                            <label for="inputFormation" class="form-label">Formation</label>
+                            <select class="dropdownlist" id="inputFormation" class="form-select"  (change)="selectFormationChange($event)" name="formation" required>
+                                <option value="null" disabled>Choisir la formation...</option>
+                                <option *ngFor="let f of formations$|async" [ngValue]="f" [selected]="session.formation.codeFormation===f?.codeFormation">{{f?.codeFormation}}-{{f?.nom}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="inputFormateur" class="form-label">Formateur</label>
+                            <select class="dropdownlist" id="inputFormateur" class="form-select"  [(ngModel)]="selectFormateur" (change)="selectFormateurChange($event)" name="formateur" required #formateur="ngModel">
+                                <option value="null" disabled selected>Choisir le formateur ...</option>
+                                <option value="null">Aucun Formateur pour l'instant</option>
+                                <option *ngFor="let f of formateurs" [ngValue]="f" [selected]="session?.formateur?.codeUser===f?.codeUser">{{f?.codeUser}}-{{f?.nom}}</option>
+                            </select>
+                            <div *ngIf="(formateur.invalid && formateur.dirty) || formateur.value==null" class="invalid-feedback text-danegr">
+                                Veuillez choisir un formateur SVP !!!
+                             </div>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <mat-form-field class="example-chip-list" appearance="fill">
+                                <mat-label>Salles Sélectionnées</mat-label>
+                                <mat-chip-list #chipList aria-label="Sélection des salles">
+                                  <mat-chip color="accent"
+                                    *ngFor="let salle of codeSalles"
+                                    (removed)="remove(salle)">
+                                    {{salle}}
+                                    <button matChipRemove>
+                                      <mat-icon>cancel</mat-icon>
+                                    </button>
+                                  </mat-chip>
+                                  <input
+                                    placeholder="Nouvelle Salle..."
+                                    #salleInput
+                                    [formControl]="fruitCtrl"
+                                    [matAutocomplete]="auto"
+                                    [matChipInputFor]="chipList"
+                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                    (matChipInputTokenEnd)="add($event)">
+                                </mat-chip-list>
+                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                                  <mat-option *ngFor="let s of salles" [value]="s.codeSalle">
+                                    {{s.codeSalle + ' - ' + s.nomSalle + ' - (' + s.nbrePlaces + ' Places) - ' + s.statut}} <span *ngIf="s.statut=='RESERVED'"> By This Session</span>
+                                  </mat-option>
+                                </mat-autocomplete>
+                              </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="inputDebut" class="form-label">Date de Début</label>
+                            <input class="form-control fs-5 pt-0 pb-2" type="date" [defaultValue]="dateNow" id="inputDebut" required [(ngModel)]="session.dateDebut" name="dateDebut" #dateDebut="ngModel">
+                            <div *ngIf="dateDebut.invalid && dateDebut.dirty" class="invalid-feedback">
+                                Veuillez entrer une date de début
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="inputFin" class="form-label">Date de Fin</label>
+                            <input class="form-control fs-5 pt-0 pb-2" type="date"  id="inputFin" required [(ngModel)]="session.dateFin" name="dateFin" #dateFin="ngModel">
+                            <div *ngIf="dateFin.invalid && dateFin.dirty" class="invalid-feedback">
+                                Veuillez entrer une date de fin
+                            </div>
+                        </div>
+
+                        <div class="col-4 mb-4">
+                            <label for="inputDescription" class="form-label">Prix ( En Euros € )</label>
+                            <input type="number" min="1" class="form-control own-text" id="prix" name="prix"required [(ngModel)]="session.prix" #prix="ngModel">
+                            <div *ngIf="prix.invalid && prix.dirty" class="invalid-feedback">
+                                Veuillez entrer un montant valide
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-4">
+                            <label for="inputDescription" class="form-label">Description</label>
+                            <textarea class="form-control" name="" id="inputDescription" [(ngModel)]="session.description" name="description"cols="30" rows="3" placeholder="Entrez une description ou présentation de ladite formation" [value]="''"></textarea>
+                        </div>
+                        
+                        <div class="col-12">
+                            <button type="submit" [disabled]="form.invalid" class="btn btn-primary mt-3 ps-4 pe-4" [ngClass]="isCreation? 'btn-primary':'btn-warning'" >{{ isCreation? "Créer":"Modifier"}}</button>
+                        </div>
+                    </form>
+                </ng-template>
+              </ngb-panel>
+        </ngb-accordion>
+    </div>
+
+    <div class="container-fluid p-3" *ngIf="sessions$ && attribSalles && varAttrib">
+        <ngb-accordion [closeOthers]="true" activeIds="static-1">
+            <ngb-panel id="static-1">
+                <ng-template ngbPanelTitle>
+                  <span><b>Liste des salles</b></span>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    <div class="row g-1  p-0 text-white table-responsive">
+                        <table class="row-border hover table table-striped table-hover">
+                            <thead>
+                                <tr class="fs-6">
+                                    <th scope="col"><b>Code</b></th>
+                                    <th scope="col"><b>Nom</b></th>
+                                    <th scope="col"><b>Type</b></th>
+                                    <th scope="col"><b>Début</b></th>
+                                    <th scope="col"><b>Fin</b></th>
+                                    <th scope="col"><b>Formation</b></th>
+                                    <th scope="col"><b>Formateur</b></th>
+                                    <th scope="col"><b>Salle(s)</b></th>
+                                    <th scope="col"><b>Prix</b></th>
+                                    <th scope="col"><b>statut</b></th>
+                                    <th scope="col"><b>Description</b></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let s of sessions$|async">
+                                <tr>
+                                    <th scope="row" class="align-middle own-text"><a class="own-text" [routerLink]="'/session/gestion/'+s.idSession">{{ s.codeSession }}</a></th>
+                                    <td class="align-middle own-text"> {{ s?.nom }}</td>
+                                    <td class="align-middle"> {{ s?.type }}</td>
+                                    <td class="align-middle"> {{ s?.dateDebut | date }}</td>
+                                    <td class="align-middle"> {{ s?.dateFin | date }}</td>
+                                    <td class="align-middle"> {{ s?.formation?.codeFormation }}</td>
+                                    <td class="align-middle"> {{ s?.formateur?.nom}}</td>
+                                    <td class="align-middle"> 
+                                        <ng-container *ngFor="let a of attribSalles">
+                                            <p *ngIf="a?.session.idSession==s.idSession && a?.statut=='ACTIVE'">
+                                                {{a?.salle?.codeSalle}}-{{a?.salle?.nomSalle}}-({{a?.salle?.nbrePlaces}} Places)
+                                             </p>
+                                        </ng-container>
+                                    </td>
+                                    <td class="align-middle own-text"> {{ s?.prix | currency:'EUR'}}</td>
+                                    <td class="align-middle"> {{ s?.statut }}</td>
+                                    <td class="align-middle">{{ s?.description }}</td>
+                                    <td class="align-middle"><button class="btn btn-danger btn-sm"
+                                        appConfirm
+                                        [confirmMessage]="'Voulez-vous réellement supprimer cette session ?'"
+                                        (confirmClick)="deleteSession(s.idSession)">Supprimer</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-template>
+              </ngb-panel>
+        </ngb-accordion>
+    </div>
+</div>
+

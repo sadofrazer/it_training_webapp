@@ -1,0 +1,183 @@
+
+<!-- Utilisation des classes bootstrap pour le menu -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light  pt-3 px-2 bg-light navbar-dark bg-dark w-100">
+  <!--  -->
+  <div class="container-fluid d-flex align-items-center">
+      <!-- RouterLink va généré pour nous l'attribut href -->
+      <a class="navbar-brand me-5 ps-5"   [routerLink]="'/accueil'">
+        <img src="assets/img/logoit.png" alt="image"/>
+        <span class="h3 me-5">IT Training</span>
+      </a>
+
+      <!-- Step 3: Toggle the value of the property when the toggler button is clicked. -->
+      <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
+          &#9776;
+      </button>
+
+      <!-- Step 2: Add the ngbCollapse directive to the element below. -->
+      <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
+          <ul class="navbar-nav ms-5" id="megamenu">
+              <li class="nav-item active p-0">
+                  <a class="nav-link h6  me-3 p-3" [routerLink]="'/accueil'" (click)="isMenuCollapsed = true">
+                      Accueil
+                  </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link h6 me-3 p-3" *ngIf="connexionService.isConnected()==false" [routerLink]="'certification'" (click)="isMenuCollapsed = true">
+                    A propos de nous
+                </a>
+            </li>
+
+              <li class="nav-item">
+                <a class="nav-link h6 me-3 p-3" *ngIf="connexionService.isConnected()==true" [routerLink]="''" (click)="isMenuCollapsed = true">
+                    Mon profil
+                </a>
+            </li>
+
+              <li class="nav-item dropdown">
+                  <a class="nav-link  dropdown-toggle h6 me-3 p-3" data-bs-toggle="dropdown"  [routerLink]="'/formation/catalogue'"  (click)="isMenuCollapsed = true">
+                      Formations
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item fs-6" [routerLink]="'/formation/theme/list'">Formations par Thème</a></li>
+                    <li *ngFor="let t of $themes | async "><a class="dropdown-item fs-6" [routerLink]="'/formation/lister/'+t.idTheme"> {{ t.nom }} </a></li>
+                  </ul>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link h6 me-3 p-3" *ngIf="connexionService.isConnected()==false" [routerLink]="'certification'" (click)="isMenuCollapsed = true">
+                      Certifications
+                  </a>
+              </li>
+
+              
+
+              <li class="nav-item dropdown">
+                <a class="nav-link  dropdown-toggle h6 me-3 p-3" *ngIf="connexionService.isApprenant()==true" data-bs-toggle="dropdown"  [routerLink]="'#'"  (click)="isMenuCollapsed = true">
+                    Dashboard
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark fs-6">
+                  <li><a class="dropdown-item " [routerLink]="''">Mon panier</a></li>
+                  <li><a class="dropdown-item" [routerLink]="'/inscription/lister/dashboard'">Mes inscriptions</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link  dropdown-toggle h6 me-3 p-3" *ngIf="connexionService.isFormateur()==true" data-bs-toggle="dropdown"  [routerLink]="'#'"  (click)="isMenuCollapsed = true">
+                    Dashboard
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark fs-6">
+                  <li><a class="dropdown-item " [routerLink]="''">Mes sessions</a></li>
+                  <li><a class="dropdown-item" [routerLink]="''">Mes évaluations</a></li>
+                </ul>
+              </li>
+              <!--Responsable Catalogue
+              <li class="nav-item dropdown">
+                <a class="nav-link  dropdown-toggle h6 me-3 p-3" data-bs-toggle="dropdown"  [routerLink]="'#'"  (click)="isMenuCollapsed = true">
+                    Administration
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark fs-6">
+                  <li><a class="dropdown-item "  [routerLink]="'/formation/gestion/catalogue'">Gestion du catalogue</a></li>
+                </ul>
+              </li>
+              -->
+            
+              <!--Responsable Formations
+              <li class="nav-item dropdown">
+                <a class="nav-link  dropdown-toggle h6 me-3 p-3" data-bs-toggle="dropdown"  [routerLink]="'#'"  (click)="isMenuCollapsed = true">
+                    Administration
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark fs-6">
+                  <li><a class="dropdown-item" [routerLink]="'/session/gestion'">Gestion des sessions</a></li>
+                  <li><a class="dropdown-item" [routerLink]="'/salle/inscription'">Gestion des inscriptions</a></li>
+                </ul>
+              </li>
+              -->
+
+              <!--Responsable Logistique
+              <li class="nav-item dropdown">
+                <a class="nav-link  dropdown-toggle h6 me-3 p-3" data-bs-toggle="dropdown"  [routerLink]="'#'"  (click)="isMenuCollapsed = true">
+                    Administration
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark fs-6">
+                  <li><a class="dropdown-item" [routerLink]="'/salle/gestion'">Gestion des salles</a></li>
+                  <li><a class="dropdown-item" [routerLink]="'/salle/gestion'">Valider les checks logistique</a></li>
+                </ul>
+              </li>
+              -->
+
+              <!--Administrateur-->
+              <li class="nav-item dropdown">
+                <a class="nav-link  dropdown-toggle h6 me-3 p-3" *ngIf="connexionService.isResponsable()==true" data-bs-toggle="dropdown"  [routerLink]="'#'"  (click)="isMenuCollapsed = true">
+                    Administration
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark fs-6">
+                  <li><a class="dropdown-item" href="/utilisateurs">Gestion des utilisateurs</a> </li>
+                  <li><a class="dropdown-item "  [routerLink]="'/formation/gestion/catalogue'">Gestion du catalogue</a></li>
+                  <li><a class="dropdown-item" [routerLink]="'/salle/gestion'">Gestion des salles</a></li>
+                  <li><a class="dropdown-item" [routerLink]="'/session/gestion'">Gestion des sessions</a></li>
+                  <li><a class="dropdown-item" [routerLink]="'/salle/inscription'">Gestion des inscriptions</a></li>
+                  <li><a class="dropdown-item" [routerLink]="'/salle/gestion'">Valider les checks logistique</a></li>
+                </ul>
+              </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link  dropdown-toggle h6 me-3 p-3" *ngIf="connexionService.isResponsable()==true" data-bs-toggle="dropdown"  [routerLink]="'#'"  (click)="isMenuCollapsed = true">
+                  Dashboard
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark fs-6">
+                <li><a class="dropdown-item" [routerLink]="'/dashboard/dashboard_formation'">Dashboard formation</a></li>
+                <li><a class="dropdown-item" [routerLink]="'/dashboard/dashboard_logistique'">Dashboard logistique</a></li>
+              </ul>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link h6 me-3 p-3" [routerLink]="'contact'" (click)="isMenuCollapsed = true">
+                  Contact
+              </a>
+            </li>
+          </ul>
+          <form  (ngSubmit)="getSearchWord()" class="d-flex ms-5" role="search">
+            <input class="form-control ms-5 me-2" type="search" placeholder="Rechercher des formations" aria-label="Search" name="search" [(ngModel)]="word">
+            <button class="btn btn-outline-success" type="submit">Rechercher</button>
+          </form>
+          <button *ngIf="connexionService.isConnected()==false" class="ms-4 btn btn-outline-success" [routerLink]="['/connexion']">connexion</button>
+          <button *ngIf="connexionService.isConnected()==true" class="ms-4 btn btn-outline-success" (click)="onLogout()">deconnexion</button>
+      </div>
+  </div>
+</nav>
+
+
+
+<!-- Container bootstrap -->
+  <!-- Balise qui s'utilise avec le router module -->
+  <app-accueil *ngIf=""></app-accueil>
+  <router-outlet></router-outlet>
+
+
+
+<!-- Footer -->
+<footer class="text-center text-white" style="background-color: #0a4275;">
+  <!-- Grid container -->
+  <div class="container p-4 pb-0">
+    <!-- Section: CTA -->
+    <section class="">
+      <p class="d-flex justify-content-center align-items-center">
+        <span class="me-3">Register for free</span>
+        <button mdbRipple type="button" *ngIf="connexionService.isConnected()==false" class="btn btn-outline-light btn-rounded" [routerLink]="['/connexion']">
+          se connecter!
+        </button>
+        <button mdbRipple type="button" *ngIf="connexionService.isConnected()==true" class="btn btn-outline-light btn-rounded" (click)="onLogout()">
+          se déconnecter!
+        </button>
+      </p>
+    </section>
+    <!-- Section: CTA -->
+  </div>
+  <!-- Grid container -->
+
+  <!-- Copyright -->
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+    © 2020 Copyright :
+    <a class="text-white" href="http://it-training-bdd.cloudapps-cm.com:8085/">IT Training</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->

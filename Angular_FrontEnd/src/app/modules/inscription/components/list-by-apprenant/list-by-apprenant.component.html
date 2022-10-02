@@ -1,0 +1,49 @@
+<div class="container-fluid full">
+    <div class="row d-flex justify-content-center list  align-items-center">
+        <div class="text-center mt-5 mb-4">
+            <span class="text-uppercase fst-italic text-wrap fs-4 own-title">
+                VOS INSCRIPTIONS
+            </span>
+        </div>
+        <div class="row d-flex justify-content-center   align-items-center">
+            <div class="container-fluid p-3" *ngIf="inscriptions$">
+                <ngb-accordion [closeOthers]="true" activeIds="static-1">
+                    <ngb-panel id="static-1">
+                        <ng-template ngbPanelTitle *ngIf="inscriptions$|async as s1">
+                        <span *ngIf="s1[0]"><b>Liste des inscriptions de : {{ s1[0]?.apprenant?.nom }}  {{s1[0]?.apprenant?.prenom}}</b></span>
+                        <span *ngIf="!s1[0]"><b>Vous n'avez aucune inscriptions à ce jour. "</b></span>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+                            <div class="row g-1  p-0 text-white table-responsive">
+                                <table class="row-border hover table table-striped table-hover">
+                                    <thead>
+                                        <tr class="fs-6">
+                                            <th scope="col"><b>Code</b></th>
+                                            <th scope="col"><b>Nom de la session</b></th>
+                                            <th scope="col"><b>Code Formation</b></th>
+                                            <th scope="col"><b>Formateur</b></th>
+                                            <th scope="col"><b>Date Création</b></th>
+                                            <th scope="col"><b>Statut</b></th>
+                                            <th scope="col"><b>Prix</b></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let i of inscriptions$ | async">
+                                        <tr>
+                                            <th scope="row" class="align-middle own-text"><a class="own-text" [routerLink]="'/inscription/create/session/'+i.idInscription">{{ i.codeInscription }}</a></th>
+                                            <td class="align-middle"> {{ i?.session.nom}}</td>
+                                            <td class="align-middle"> <a class="own-text" [routerLink]="'/formation/details/'+i.session.formation.idFormation">{{ i.session.formation.codeFormation }}</a></td>
+                                            <td class="align-middle"> {{ i?.session?.formateur?.nom}}</td>
+                                            <td class="align-middle"> {{ i?.dateInscription | date }}</td>
+                                            <td class="align-middle"> {{ i?.statut }}</td>
+                                            <td class="align-middle own-text"> {{ i.session?.prix| currency:'EUR'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ng-template>
+                    </ngb-panel>
+                </ngb-accordion>
+            </div>
+        </div>
+    </div>
+</div>

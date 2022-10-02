@@ -1,0 +1,101 @@
+<div class="container-fluid full">
+    <div class="row d-flex justify-content-center align-items-center" *ngIf=" session as s">
+        <div class="text-center mt-4 mb-5">
+            <span class="text-uppercase text-wrap fs-4 own-title">
+                INSCRIPTION A LA SESSION   <span class="fst-italic own-title">" <b class="own-title fs-5">{{s?.codeSession}} - {{s?.nom}}</b>"</span>
+            </span>
+        </div>
+    </div>
+    <div class="container p-0 bg-primary" *ngIf=" session as s">
+        <div class="card">
+            <div class="row container p-0 m-0 titre" *ngIf="varOk && attribSalles">
+                <div class="col-md-3 mt-3 ms-3 p-0 d-flex align-items-center h-100">
+                    <img [src]="'../../../../../assets/img/formations/'+s?.formation?.codeFormation+'.jpg'" 
+                    onerror="this.src='https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'" class="img w-100 rounded me-5" alt="...">
+                </div>
+                <div class="col-md-8 ms-3 position-relative">
+                    <div class="card-body">
+                    <h4 class="card-title  fs-4 own-text"><b class="own-text">{{ s?.codeSession}}</b></h4>
+                    <h4 class="card-title mb-4 fs-5"><b>{{ s?.nom }}</b></h4>
+                    <p class="card-text"><small class="fst-italic badge bg-primary text-wrap fs-5  p-2 ">Durée : {{ s?.formation?.nbreJrs }} {{s?.formation?.nbreJrs>1? 'Jours':'Jour'}}</small></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center mt-4 mb-3">
+                <div class="col-md-10 mb-4">
+                    <ngb-accordion  [closeOthers]="true" activeIds="static-1, static-2, static-3">
+                        <ngb-panel id="static-1">
+                            <ng-template ngbPanelTitle>
+                                <span><b>Présentation</b></span>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                <p class="mb-2 fs-5"><b>{{ s?.description}}</b></p>
+                                <p> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia
+                                aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
+                                sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica,
+                                craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                                labore sustainable VHS.</p>
+                            </ng-template>
+                          </ngb-panel>
+                    </ngb-accordion>
+                </div>
+
+                <div class="col-md-5 mb-4">
+                    <label for="dateDebut" class="form-label"><b>Date de debut</b></label>
+                    <input type="text" class="form-control" id="dateDebut" name="dateDebut" readonly disabled [value]="s?.dateDebut|date">
+                </div>
+
+                <div class="col-md-5 mb-4">
+                    <label for="dateFin" class="form-label"><b>Date de fin</b></label>
+                    <input type="text" class="form-control" id="dateFin" name="dateDebut" readonly disabled [value]="s?.dateFin | date">
+                </div>
+
+                <div class="col-md-5">
+                    <ngb-accordion #acc="ngbAccordion" activeIds="static-3">
+                        <ngb-panel id="static-3">
+                            <ng-template ngbPanelTitle>
+                                <span><b>Formateur</b></span>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                    <label for="prenom" class="form-label"><b>Nom & Prénom(s)</b></label>
+                                    <input type="text" class="form-control" id="prenom" name="prenom" readonly disabled [value]="s?.formateur.nom + '   ' +s?.formateur.prenom ">
+
+                                    <label for="ese" class="form-label mt-3"><b>Société</b></label>
+                                    <input type="text" class="form-control" id="ese" name="ese" readonly disabled [value]="s?.formateur.societe">
+
+                                    <label for="note" class="form-label mt-3"><b>Note moyenne</b></label>
+                                    <input type="text" class="form-control" id="note" name="note" readonly disabled [value]="s?.formateur.certifications">
+
+                            </ng-template>
+                          </ngb-panel>
+                    </ngb-accordion>
+                </div>
+
+                <div class="col-md-5">
+                    <ngb-accordion #acc="ngbAccordion" activeIds="static-3">
+                        <ngb-panel id="static-3">
+                            <ng-template ngbPanelTitle>
+                                <span><b>Salle(s)</b></span>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                <ng-container *ngFor="let a of attribSalles">
+                                    <p *ngIf="a?.session.idSession==s.idSession && a?.statut=='ACTIVE'">
+                                        {{a?.salle?.codeSalle}}-{{a?.salle?.nomSalle}}-({{a?.salle?.nbrePlaces}} Places)
+                                     </p>
+                                </ng-container>
+                                <label for="nbre" class="form-label mt-3"><b>Nombre de participants max</b></label>
+                                <input type="text" class="form-control" id="nbre" name="bre" readonly disabled [value]="nbreMax">
+                            </ng-template>
+                          </ngb-panel>
+                    </ngb-accordion>
+                </div>
+                <div class="row d-flex justify-content-end mt-4">
+                    <div class="col-md-2">
+                        <button class="fst-italic badge btn-success text-wrap p-2 fs-6 mt-3 mb-3" (click)="addInscription()" >&#9733; <b>S'inscrire</b></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

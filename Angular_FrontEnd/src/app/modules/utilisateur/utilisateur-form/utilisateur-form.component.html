@@ -1,0 +1,175 @@
+ <div class="">
+            <form *ngIf="utilisateur && affectation" (ngSubmit)="onSubmit()" #utilisateurForm="ngForm" >
+
+                  <div class="container bg-dark text-white">
+                        <div class="row">
+                              <div class="col-sm">
+                                    <div class="input-field col-sm mt-3" *ngIf="isAddForm">
+                                          <label for="affectation">Affect</label>
+                                          <select id="inputStheme" class="form-control border-info mb-3"
+                                                [(ngModel)]="af" name="type" required>
+                                                <option [ngValue]="null" disabled>Choisir un type ...</option>
+                                                <option *ngFor="let t of affectation" [ngValue]="t">
+                                                      {{t.idType}}-{{t.nom}}</option>
+                                          </select>
+                                    </div>
+                                    <!-- utilisateur nom -->
+                                    <div class="form-group col-sm mb-4">
+                                          <label for="name">Nom</label>
+                                          <input type="text" class="form-control" id="name" required
+                                                [(ngModel)]="utilisateur.nom" name="nom" #nom="ngModel">
+
+                                          <div [hidden]="nom.valid || nom.pristine" class="card-panel red accent-1">
+                                                Le nom est requis
+                                          </div>
+                                    </div>
+                                    <!-- utilisateur email -->
+                                    <div class="form-group col-sm mb-4">
+                                          <label for="email">Email</label>
+                                          <input type="email" class="form-control" id="cp" required
+                                                [(ngModel)]="utilisateur.email" name="email" #email="ngModel">
+                                          <div [hidden]="email.valid || email.pristine" class="card-panel red accent-1">
+                                                le mail est requis
+                                          </div>
+                                    </div>
+                                    <!-- utilisateur tel -->
+                                    <div class="form-group col-sm mb-4">
+                                          <label for="tel">Télephone</label>
+                                          <input type="tel" class="form-control" id="telephone" required
+                                                [(ngModel)]="utilisateur.telephone" name="telephone"
+                                                #telephone="ngModel">
+                                          <div [hidden]="telephone.valid || telephone.pristine"
+                                                class="card-panel red accent-1">
+                                                le telephone est requis
+                                          </div>
+                                    </div>
+                                    <!-- utilisateur societé -->
+                                    <div class="form-group col-sm mb-4">
+                                          <label for="societe">Societé </label>
+                                          <input type="text" class="form-control" id="societe" required
+                                                [(ngModel)]="utilisateur.societe" name="societe" #societe="ngModel">
+                                          <div [hidden]="societe.valid || societe.pristine"
+                                                class="card-panel red accent-1">
+                                                la societé est requis
+                                          </div>
+                                    </div>
+                                    <!-- utilisateur login -->
+                                    <div class="form-group col-sm mb-4">
+                                          <label for="login">Mot de passe </label>
+                                          <input type="password" class="form-control" id="login" required
+                                                [(ngModel)]="utilisateur.login" name="login" #login="ngModel">
+                                          <div [hidden]="login.valid || login.pristine" class="card-panel red accent-1">
+                                                le mot de passe est requis
+                                          </div>
+                                    </div>
+                                    <!-- utilisateur pasword -->
+                                    <div *ngIf="isAddForm" class="form-group col-sm mb-4">
+                                          <label for="password">Valider le mont de passe </label>
+                                          <input type="password" class="form-control" id="password" required
+                                                [(ngModel)]="utilisateur.password" name="password" #password="ngModel">
+                                          <div [hidden]="password.valid || password.pristine"
+                                                class="card-panel red accent-1">
+                                                le mot de passe est requis
+                                          </div>
+                                    </div>
+
+                              </div>
+
+                              <div class="col-sm">
+                                    <!--utilisateur codeUser -->
+                                    <div *ngIf="isAddForm" class="form-group col-sm mt-3">
+                                          <label for="codeUser">Code utilisateur</label>
+                                          <input type="text" class="form-control" id="picture" required
+                                                [(ngModel)]="utilisateur.codeUser" name="codeUser" #codeUser="ngModel">
+
+                                          <div [hidden]="codeUser.valid || codeUser.pristine"
+                                                class="card-panel red accent-1">
+                                                le code est requis
+                                          </div>
+
+                                    </div>
+                                    <!-- utilisateur prenom-->
+                                    <div class="form-group col-sm mt-3">
+                                          <label for="prenom">Prenom</label>
+                                          <input type="text" class="form-control" id="hp" required
+                                                [(ngModel)]="utilisateur.prenom" name="prenom" #prenom="ngModel">
+                                          <div [hidden]="prenom.valid || prenom.pristine"
+                                                class="card-panel red accent-1">
+                                                Le prenom est requis
+                                          </div>
+                                    </div>
+                                    <!-- utilisateur date -->
+                                    <div class="form-group col-sm mt-4">
+                                          <label for="dateNaiss">Date de naisance</label>
+                                          <input type="date" class="form-control" id="dateNaiss" required
+                                                [(ngModel)]="utilisateur.dateNaiss" name="dateNaiss"
+                                                #dateNaiss="ngModel">
+                                          <div [hidden]="dateNaiss.valid || dateNaiss.pristine"
+                                                class="card-panel red accent-1">
+                                                la date de naissance est requis
+                                          </div>
+                                    </div>
+                                    <!-- utilisateur adresse -->
+                                    <div class="form-group col-sm mt-4">
+                                          <label for="adresse">Adresse</label>
+                                          <input type="text" class="form-control" id="adresse" required
+                                                [(ngModel)]="utilisateur.adresse" name="adresse" #adresse="ngModel">
+                                          <div [hidden]="adresse.valid || adresse.pristine"
+                                                class="card-panel red accent-1">
+                                                le telephone est requis
+                                          </div>
+                                    </div>
+                                    <!-- utilisateur diplome -->
+                                    <div class="form-group col-sm mt-4" *ngIf="isAddForm && af.nom ==='APPRENANT'">
+                                          <label for="diplome">Votre dernier diplome </label>
+                                          <input type="text" class="form-control" id="diplome" required
+                                                [(ngModel)]="apprenant.dernierDiplome" name="diplome"
+                                                #dernierDiplome="ngModel">
+                                          <div [hidden]="dernierDiplome.valid || dernierDiplome.pristine"
+                                                class="card-panel red accent-1">
+                                                le diplome est requis
+                                          </div>
+                                    </div>
+
+                                    <!-- utilisateur certification -->
+                                    <div class="form-group col-sm mt-4" *ngIf="isAddForm && af.nom ==='FORMATEUR'">
+                                          <label for="certification">Votre certification </label>
+                                          <input type="text" class="form-control" id="certification" required
+                                                [(ngModel)]="formateur.certifications" name="certification"
+                                                #certification="ngModel">
+                                          <div [hidden]="certification.valid || certification.pristine"
+                                                class="card-panel red accent-1">
+                                                la certification est requis
+                                          </div>
+                                    </div>
+
+                                    <!-- utilisateur fonction -->
+                                    <div class="form-group col-sm mt-4" *ngIf="isAddForm && af.nom ==='Responsable'">
+                                          <label for="fonction">Votre fonction </label>
+                                          <input type="text" class="form-control" id="fonction" required
+                                                [(ngModel)]="responsable.fonction" name="fonction"
+                                                #certification="ngModel">
+                                          <div [hidden]="certification.valid || certification.pristine"
+                                                class="card-body red accent-1">
+                                                la certification est requis
+                                          </div>
+                                    </div>
+
+                              </div>
+                              <!-- Submit button -->
+                              <div class="divider"></div>
+                              <div class="section center">
+                                    <button type="submit" class="text-success"
+                                          [disabled]="!utilisateurForm.form.valid">
+                                          Valider</button>
+                              </div>
+
+    </div>
+     </div>
+
+            </form>
+   </div>
+
+  <h3 *ngIf="!utilisateur" class="center"><app-loder></app-loder></h3>
+
+  

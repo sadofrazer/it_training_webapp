@@ -1,0 +1,103 @@
+version: '3.3'
+services:
+    it-training-db:
+        container_name: it-trainig-mysql
+        image: mysql:5.7
+        restart: always
+        environment:
+            - 'MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}'
+            - 'MYSQL_DATABASE=${DB_NAME}'
+            - 'MYSQL_USER=${DB_USER}'
+            - 'MYSQL_PASSWORD=${DB_PASSWORD}'
+        ports:
+            - '3306:3306'
+        volumes:
+            - it_training_db_data:/var/lib/mysql
+        networks:
+            - it_training_back
+    
+
+    phpmyadmin:
+        container_name: myadmin
+        depends_on:
+            - it-training-db
+        restart: always
+        networks: 
+            - it_training_back
+        links:
+            - 'it-training-db:db'
+        ports:
+            - '8091:80'
+        image: phpmyadmin
+
+
+    formation-rest-api:
+      build: ${PWD}/it_training_rest_api/webServices/FormationRestApi/
+      container_name: formation-rest-api
+      #image: sadofrazer/ittraining_api_formation:1.0
+      restart: always
+      depends_on:
+            - it-training-db
+            - phpmyadmin
+      ports:
+            - '${FORMATION_API_PORT}:8080'
+      environment:
+            - 'DB_USER=${DB_USER}'
+            - 'DB_PASSWORD=${DB_PASSWORD}'
+            - 'DB_NAME=${DB_NAME}'
+            - 'DB_HOST=it-training-db'
+            - 'DB_PORT=3306'
+      networks:
+            - it_training_back
+            - it_training_front
+    
+
+    utilisateur-rest-api:
+      build: ${PWD}/it_training_rest_api/webServices/UtilisateurRestApi/
+      container_name: utilisateur-rest-api
+      #image: sadofrazer/ittraining_api_utilisateur:1.0
+      restart: always
+      depends_on:
+            - it-training-db
+            - phpmyadmin
+      ports:
+            - "${UTILISATEUR_API_PORT}:8080"
+      environment:
+            - 'DB_USER=${DB_USER}'
+            - 'DB_PASSWORD=${DB_PASSWORD}'
+            - 'DB_NAME=${DB_NAME}'
+            - 'DB_HOST=it-training-db'
+            - 'DB_PORT=3306'
+      networks:
+            - it_training_back
+            - it_training_front
+
+
+    it-training-webapp:
+      build: ${PWD}/Angular_FrontEnd/
+      container_name: angular-webapp
+      #image: sadofrazer/ittraining_webapp:1.0
+      restart: always
+      depends_on:
+            - utilisateur-rest-api
+            - formation-rest-api
+      ports:
+            - '${WEBAPP_PORT}:80'
+      environment:
+            - 'FORMATION_API_HOST=${FORMATION_API_HOST}'
+            - 'UTILISATEUR_API_HOST=${UTILISATEUR_API_HOST}'
+            - 'UTILISATEUR_REST_API_URL=http://${UTILISATEUR_API_HOST}:${UTILISATEUR_API_PORT}/UtilisateurRestApi/rest'
+            - 'FORMATION_REST_API_URL=http://${FORMATION_API_HOST}:${FORMATION_API_PORT}/FormationRestApi/rest'
+      networks:
+            - it_training_front
+
+volumes:
+    it_training_db_data:
+
+networks:
+    it_training_back:
+      driver: bridge
+      name: it_training_back
+    it_training_front:
+      driver: bridge
+      name: it_training_front

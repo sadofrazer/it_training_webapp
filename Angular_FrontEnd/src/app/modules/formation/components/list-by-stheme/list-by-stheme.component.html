@@ -1,0 +1,44 @@
+<div class="container-fluid bg-image">
+    <div class="row d-flex justify-content-center   align-items-center">
+        <div class="text-center mt-5" *ngIf="theme$|async as t">
+            <span class="text-uppercase text-wrap fs-4 own-title">
+                NOS FORMATIONS SUR LE THEME  <span class="fst-italic">" {{t.nom}} "</span>
+            </span>
+        </div>
+    </div>
+    <div class="row justify-content-center h-100 list" *ngIf="sthemes$|async">
+        <div class="mt-4">
+            <ngb-accordion #acc="ngbAccordion" [closeOthers]="true" activeIds="toggle-1" *ngFor="let s of sthemes$ | async">
+                <ngb-panel id="toggle-1">
+                    <ng-template ngbPanelTitle>
+                        <span>&#9733; <b class="fs-5">{{s.nom}}</b></span>
+                    </ng-template>
+                    <ng-template ngbPanelContent  >
+                        <div class="table-responsive rounded ">
+                            <table class="table table-striped fs-6">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col">Code</th>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col" class="nb">Nbre Jours</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let f of formation$ |async">
+                                    <tr *ngIf="f.stheme.idStheme==s.idStheme">
+                                        <th scope="row"  class="align-middle own-text"><a [routerLink]="'/formation/details/'+f.idFormation">{{ f.codeFormation }}</a></th>
+                                        <td  class="align-middle">{{ f.nom }}</td>
+                                        <td  class="align-middle">{{ f.description }}</td>
+                                        <td  class="align-middle text-center"><span class="badge bg-primary rounded-pill h6 pe-3 ps-3 fs-5 pt-1 pb-2">{{ f.nbreJrs| number }}</span></td>
+                                        <td class="align-middle"><button class="btn btn-success btn-sm ms-5" [routerLink]="'/session/lister/formation/'+f.idFormation">Sessions</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </ng-template>
+                </ngb-panel>
+            </ngb-accordion>
+        </div>
+    </div>
+</div>

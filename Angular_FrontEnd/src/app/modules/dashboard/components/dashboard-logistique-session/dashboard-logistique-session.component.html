@@ -1,0 +1,37 @@
+<div *ngIf="sessions" >
+    <form (ngSubmit)="onSubmitFormSession()">
+        <select  name="session" class="form-select" [(ngModel)]="session" aria-label="Default select example">
+            <option *ngFor="let session of sessions" [ngValue]="session">{{session.nom}} - date de fin {{session.dateFin}}</option>
+        </select>
+    </form>
+    <div class="row mt-4" *ngIf="session" >
+        <div class="col-lg-2 mt-3">
+            <p class="fst-italic fs-5" *ngIf="session.formateur"><strong>formateur : {{session.formateur.nom}}</strong></p>
+        </div>
+        <div class="col-lg-1">
+            <div class="alert alert-success" *ngIf="session.formateur" role="alert">
+                Confirmé!
+            </div>
+        </div>
+        <form action="" *ngIf="session.formateur==null">
+            <div class="row">
+                <div class="col-lg-2">
+                    <p class="fst-italic fs-5"><strong>formateur : aucun</strong></p>
+                </div>
+                <div class="col-lg-2">
+                    <button class="btn btn-danger" type="submit">attibuer</button>
+                </div>  
+            </div>
+        </form>
+        
+        
+            
+        <!--<p>salles : </p>
+        <select  class="form-select" aria-label="Default select example">
+            <option *ngFor="let session of sessions" [value]="session.idSession">{{session.nom}} - date de fin {{session.dateFin}}</option>
+        </select>--> 
+    </div>      
+</div> 
+<div *ngIf="sessions==null" >
+    <p class="mt-5 fst-italic fs-5"><strong>Pas de tableau de bord à proposer</strong></p> 
+</div> 

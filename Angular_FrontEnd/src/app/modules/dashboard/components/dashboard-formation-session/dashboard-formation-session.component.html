@@ -1,0 +1,14 @@
+<div *ngIf="sessions" >
+    <form (ngSubmit)="onSubmitFormSession()">
+        <select  name="session" class="form-select" [(ngModel)]="session" aria-label="Default select example">
+            <option *ngFor="let session of sessions" [ngValue]="session">{{session.nom}} - date de fin {{session.dateFin}}</option>
+        </select>
+    </form> 
+    <div class= "mt-4" *ngIf="session" >
+        <p>Absents sur formations :</p>
+        <p>Evaluations des stagiaires : </p>
+    </div>  
+</div> 
+<div *ngIf="sessions==null" >
+    <p class="mt-5 fst-italic fs-5"><strong>Pas de tableau de bord à proposer</strong></p> 
+</div> 

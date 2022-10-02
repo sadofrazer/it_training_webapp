@@ -1,0 +1,66 @@
+<div class="container-fluid full">
+    <div class="row d-flex justify-content-center   align-items-center">
+        <div class="text-center mt-5 mb-4">
+            <span class="text-uppercase fst-italic text-wrap fs-4 own-title">
+                NOS SESSIONS EN COURS POUR CETTE FORMATION ...
+            </span>
+        </div>
+        <div class="row d-flex justify-content-center   align-items-center">
+            <div class="container-fluid p-3" *ngIf="sessions$ && attribSalles && varAttrib">
+                <ngb-accordion [closeOthers]="true" activeIds="static-1">
+                    <ngb-panel id="static-1">
+                        <ng-template ngbPanelTitle *ngIf="sessions$|async as s1">
+                        <span *ngIf="s1[0]"><b>Liste des sessions pour la formation "{{s1[0]?.nom}} "</b></span>
+                        <span *ngIf="!s1[0]"><b>Aucune sessions pour cette formation à ce jour. "</b></span>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+                            <div class="row g-1  p-0 text-white table-responsive">
+                                <table class="row-border hover table table-striped table-hover">
+                                    <thead>
+                                        <tr class="fs-6">
+                                            <th scope="col"><b>Code</b></th>
+                                            <th scope="col"><b>Nom</b></th>
+                                            <th scope="col"><b>Type</b></th>
+                                            <th scope="col"><b>Début</b></th>
+                                            <th scope="col"><b>Fin</b></th>
+                                            <th scope="col"><b>Formation</b></th>
+                                            <th scope="col"><b>Formateur</b></th>
+                                            <th scope="col"><b>Salle(s)</b></th>
+                                            <th scope="col"><b>Prix</b></th>
+                                            <th scope="col"><b>statut</b></th>
+                                            <th scope="col"><b>Description</b></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let s of sessions$|async">
+                                        <tr>
+                                            <th scope="row" class="align-middle own-text"><a class="own-text" [routerLink]="'/inscription/create/session/'+s.idSession">{{ s.codeSession }}</a></th>
+                                            <td class="align-middle"> {{ s?.nom }}</td>
+                                            <td class="align-middle"> {{ s?.type }}</td>
+                                            <td class="align-middle"> {{ s?.dateDebut | date }}</td>
+                                            <td class="align-middle"> {{ s?.dateFin | date }}</td>
+                                            <td class="align-middle own-text"> {{ s?.formation?.codeFormation }}</td>
+                                            <td class="align-middle"> {{ s?.formateur?.nom}}</td>
+                                            <td class="align-middle"> 
+                                                <ng-container *ngFor="let a of attribSalles">
+                                                    <p *ngIf="a?.session.idSession==s.idSession && a?.statut=='ACTIVE'">
+                                                        {{a?.salle?.codeSalle}}-{{a?.salle?.nomSalle}}-({{a?.salle?.nbrePlaces}} Places)
+                                                    </p>
+                                                </ng-container>
+                                            </td>
+                                            <td class="align-middle own-text"> {{ s?.prix | currency:'EUR'}}</td>
+                                            <td class="align-middle"> {{ s?.statut }}</td>
+                                            <td class="align-middle">{{ s?.description }}</td>
+                                            <td class="align-middle"><button class="btn btn-success btn-sm ms-5" [routerLink]="'/inscription/create/session/'+s.idSession">S'inscrire</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ng-template>
+                    </ngb-panel>
+                </ngb-accordion>
+            </div>
+        </div>
+    </div>
+</div>
+

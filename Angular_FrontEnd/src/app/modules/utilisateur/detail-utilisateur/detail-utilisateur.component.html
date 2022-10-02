@@ -1,0 +1,60 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<div *ngIf="utilisateur" class="row center">
+    <div class="col s12 m8 offset-m2">
+    <h2 class="header center">{{ utilisateur.nom | uppercase  }}</h2>
+    <div class="card horizontal hoverable">
+     
+      <div class="card-stacked ">
+        <div class="card-content">
+          <table class="bordered striped">
+            <tbody>
+             <tr (click)="goToUtilisateurList()">
+                <td>Nom</td>
+               <td><strong>{{ utilisateur.nom | uppercase}}</strong></td>
+              </tr>
+              <tr>
+                <td>Prenom</td>
+                <td><strong>{{ utilisateur.prenom }}</strong></td>
+              </tr>
+              <tr>
+                <td>Email</td>
+                <td><strong>{{ utilisateur.email }}</strong></td>
+              </tr>
+              <tr>
+                <td>Adresse</td>
+                <td><strong>{{ utilisateur.adresse }}</strong></td>
+              </tr>
+                <tr>
+                  <td>Date de naissance</td>
+                  <td><strong>{{ utilisateur.dateNaiss |  date:"MM/dd/yyyy" }}</strong></td>
+                </tr>
+                <tr *ngIf="utilisateur.typeUser">
+                <td >Type Utilisateur</td>
+                <td>
+                 {{utilisateur.typeUser.nom}}
+                </td>
+              </tr>
+              <tr>
+                <td>Statut</td>
+                <td><strong>{{ utilisateur.statut }}</strong></td>
+              </tr>
+              <tr>
+                <td>Societé</td>
+                <td><strong>{{ utilisateur.societe }}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-action">
+          <a (click)="goToUtilisateurList()">Retour</a>
+          <a (click)="goToEditUtilisateur(utilisateur)">Modifier</a>
+          <a (click)="deleteUtilisateur(utilisateur)">Supprimer</a>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+    
+    <h4 *ngIf='!utilisateur' class="center"><app-loder></app-loder></h4>

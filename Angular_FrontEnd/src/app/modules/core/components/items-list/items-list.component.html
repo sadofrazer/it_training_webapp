@@ -1,0 +1,22 @@
+<div class="container">
+  <ngb-carousel *ngIf="tab.length>1">
+    <ng-template ngbSlide *ngFor="let f1 of tab index as i">
+            <div class="row car">
+              <div class="col-md-4 m-0 mb-4" *ngFor="let f of f1 index as j">
+                  <div class="card w-100 h-100 d-inline-block position-relative">
+                    <div class="row h-50">
+                      <img class="card-img-top h-100" [src]="'../../../../../assets/img/formations/'+f.codeFormation+'.jpg'"
+                      onerror="this.src='https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'" alt="Card image cap">
+                    </div>
+                    <div class="card-body border-top border-dark border-2">
+                      <span class="fs-5 badge bg-dark position-absolute bottom-50 start-0 p-2">{{ f.nbreJrs | number }} {{ f.nbreJrs > 1? 'Jours':'Jour' }} </span>
+                      <h4 class="card-title fs-5 mb-3"><b>{{ f.stheme.nom }}</b></h4>
+                      <p class="card-text  mb-4 fs-6 h-10">{{ f.nom }}</p>
+                      <button class="btn-sm btn-primary position-absolute bottom-0 start-50 translate-middle-x mb-2 mt_5" [routerLink]="'/formation/details/'+f.idFormation">En savoir plus ...</button>
+                    </div>
+                  </div>
+                </div>
+            </div> 
+    </ng-template>     
+  </ngb-carousel>
+</div>

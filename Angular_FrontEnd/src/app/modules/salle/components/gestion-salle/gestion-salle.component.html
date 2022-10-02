@@ -1,0 +1,130 @@
+    <div class="container-fluid full">
+    <div class="row d-flex justify-content-center   align-items-center">
+        <div class="text-center mt-3">
+            <span class="text-uppercase fst-italic text-wrap fs-4 own-title">
+                Gestion des salles
+            </span>
+        </div>
+    </div>
+    <div class="container mt-3" *ngIf="salle && salles$">
+        <ngb-accordion [closeOthers]="true" activeIds="static-1" class="bg-dark">
+            <ngb-panel id="static-1">
+                <ng-template ngbPanelTitle>
+                  <span><b>Créer / Modifier une salle</b></span>
+                </ng-template>
+                <ng-template ngbPanelContent class="bg-dark">
+                    <form class="row g-3  bg-dark p-3 text-white form-floatingneeds-validation" novalidate #form="ngForm" (ngSubmit)="addUpdateSalle()">
+
+                        <div class="col-md-4">
+                            <label for="code" class="form-label">Code salle</label>
+                            <input type="text" class="form-control own-text" id="code" name="code"required minlength="6" [(ngModel)]="salle.codeSalle" #code="ngModel" (change)="changeId($event)">
+                            <div *ngIf="code.invalid && code.dirty" class="invalid-feedback">
+                                Le code de la salle doit avoir au moins 6 caractères
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+
+                        </div>
+
+                        <div class="col-md-8">
+                            <label for="nom" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="nom" name="nom"required [(ngModel)]="salle.nomSalle" #nom="ngModel">
+                            <div *ngIf="nom.invalid && nom.dirty" class="invalid-feedback text-danegr">
+                                Le nom de la salle est indispensable!!!
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="inputPlaces" class="form-label">Nombre de Places</label>
+                            <input class="form-control fs-5 pt-0 pb-2" type="number"  id="inputPlaces" min="1" max="99" required [(ngModel)]="salle.nbrePlaces" name="nbrePlaces" #nbreJours="ngModel">
+                            <div *ngIf="nbreJours.invalid && nbreJours.dirty" class="invalid-feedback">
+                                Le nombre de places doit etre supérieur à 0
+                            </div>
+                        </div>
+
+                        <!--<div class="col-md-6">
+                            <label for="inputStheme" class="form-label">Statut</label>
+                            <select class="dropdownlist" id="inputStatut" class="form-select" [(ngModel)]="salle.statut" name="stheme" required>
+                                <option value='FREE'>FREE ( Libre )</option>
+                                <option value="BUSY">BUSY (Occupée)</option>
+                                <option value="RESERVED">RESERVED (Reservée)</option>
+                            </select>
+                        </div>-->
+
+                        <div class="col-md-6">
+                            <label for="inputRue" class="form-label">Nom et Numéro de rue</label>
+                            <input class="form-control fs-5 pt-0" type="text"  id="inputRue" required [(ngModel)]="rue" name="nomRue" #nomRue="ngModel">
+                            <div *ngIf="nomRue.invalid && nomRue.dirty" class="invalid-feedback">
+                                Veuillez entrer le nom et le numéro de rue !!!
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="inputVille" class="form-label">Ville</label>
+                            <input class="form-control fs-5 pt-0" type="text"  id="inputVille" required [(ngModel)]="salle.ville" name="nomVille" #nomVille="ngModel">
+                            <div *ngIf="nomVille.invalid && nomVille.dirty" class="invalid-feedback">
+                                Veuillez entrer la Ville !!!
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="inputPostal" class="form-label">Code postal</label>
+                            <input class="form-control fs-5 pt-0 pb-2" type="text"  id="inputPostal" required [(ngModel)]="codePost" name="inputPostal" #codePostal="ngModel">
+                            <div *ngIf="codePostal.invalid && codePostal.dirty" class="invalid-feedback">
+                                Veuillez entrer le code postal !!!
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-4">
+                            <label for="inputComments" class="form-label">Commentaires</label>
+                            <textarea class="form-control" name="" id="inputComments" [(ngModel)]="salle.commentaires" name="comments"cols="30" rows="3" placeholder="Entrez un commentaire si nécessaire"></textarea>
+                        </div>
+                        
+                        <div class="col-12">
+                            <button type="submit" [disabled]="form.invalid" class="btn btn-primary mt-3 ps-4 pe-4" [ngClass]="isCreation? 'btn-primary':'btn-warning'" >{{ isCreation? "Créer":"Modifier"}}</button>
+                        </div>
+                    </form>
+                </ng-template>
+              </ngb-panel>
+        </ngb-accordion>
+    </div>
+
+    <div class="container-fluid p-3">
+        <ngb-accordion [closeOthers]="true" activeIds="static-1">
+            <ngb-panel id="static-1">
+                <ng-template ngbPanelTitle>
+                  <span><b>Liste des salles</b></span>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    <div class="row g-1  p-0 text-white table-responsive">
+                        <table class="row-border hover table table-striped table-hover">
+                            <thead>
+                                <tr class="fs-6">
+                                    <th scope="col"><b>Code</b></th>
+                                    <th scope="col"><b>Nom</b></th>
+                                    <th scope="col"><b>Ville</b></th>
+                                    <th scope="col"><b>Adresse</b></th>
+                                    <th scope="col"><b>Statut</b></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let s of salles$|async">
+                                <tr >
+                                    <th scope="row" class="align-middle own-text"><a class="own-text" [routerLink]="'/salle/gestion/'+s.idSalle">{{ s.codeSalle }}</a></th>
+                                    <td class="align-middle"> {{ s.nomSalle }}</td>
+                                    <td class="align-middle">{{ s.ville }}</td>
+                                    <td class="align-middle">{{ s.adresse }}</td>
+                                    <td class="align-middle">{{ s.statut }}</td>
+                                    <td class="align-middle"><button class="btn btn-danger btn-sm"
+                                        appConfirm
+                                        [confirmMessage]="'Voulez-vous réellement supprimer cette salle ?'"
+                                        (confirmClick)="deleteSalle(s.idSalle)">Supprimer</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-template>
+              </ngb-panel>
+        </ngb-accordion>
+    </div>
+</div>

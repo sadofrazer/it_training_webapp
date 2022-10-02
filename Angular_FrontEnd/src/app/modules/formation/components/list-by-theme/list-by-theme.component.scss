@@ -1,0 +1,31 @@
+.full{
+    background: url(../../../../../assets/img/background-list-form.jpg) no-repeat center;
+    background-size: cover;
+    min-height: 100vh;
+    padding: 0px;
+}
+
+.card-header{
+    background-color: #0275d8;
+    margin-top: 0;
+}
+
+.list{
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.nb{
+    width: 10%;
+    text-align: center;
+}
+
+.own-text{
+    font-family: 'Open Sans', sans-serif;
+}
+
+.own-title{
+    //font-family: 'Monoton', cursive;
+    font-family: 'Trade Winds', cursive;
+    font-weight: 600
+}
